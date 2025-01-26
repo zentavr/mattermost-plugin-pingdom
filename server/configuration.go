@@ -4,7 +4,7 @@ import (
 	"errors"
 	"fmt"
 	"reflect"
-	"strings"
+//	"strings"
 )
 
 // configuration captures the plugin's external configuration as exposed in the Mattermost server

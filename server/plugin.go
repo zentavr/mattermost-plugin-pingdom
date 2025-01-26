@@ -62,17 +62,15 @@ func (p *Plugin) OnActivate() error {
 		}
 	}
 
-	/*
-	command, err := p.getCommand()
-	if err != nil {
-		return fmt.Errorf("failed to get command: %w", err)
-	}
-	*/
-
-	err = p.API.RegisterCommand(command)
-	if err != nil {
-		return fmt.Errorf("failed to register command: %w", err)
-	}
+// 	command, err := p.getCommand()
+// 	if err != nil {
+// 		return fmt.Errorf("failed to get command: %w", err)
+// 	}
+//
+// 	err = p.API.RegisterCommand(command)
+// 	if err != nil {
+// 		return fmt.Errorf("failed to register command: %w", err)
+// 	}
 
 	return nil
 }
