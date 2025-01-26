@@ -1,0 +1,30 @@
+{
+    "name": "mattermost-plugin-pingdom",
+    "dockerComposeFile": "docker-compose.yml",
+    "service": "mattermost",
+    "customizations": {
+      "jetbrains": {
+        "settings": {
+          "com.intellij:app:EditorSettings.is_ensure_newline_at_eof": true,
+          "com.intellij:app:HttpConfigurable.use_proxy_pac": true
+        }
+      },
+      "vscode": {
+        "settings": {
+          "terminal.integrated.shell.linux": "/bin/bash"
+        }
+      }
+    },
+    "workspaceFolder": "/app",
+    "remoteUser": "mattermost",
+    "containerEnv": {
+      // Tell VS Code server to install in /home/appuser/.vscode-server
+      "VSCODE_AGENT_FOLDER": "/.vscode/.vscode-server"
+    },
+    "forwardPorts": [
+      "mattermost:8065",
+      "mattermost:8067",
+      "mattermost:8074",
+      "mattermost:8075"
+    ]
+}

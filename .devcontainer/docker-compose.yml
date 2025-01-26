@@ -1,0 +1,104 @@
+---
+networks:
+  mm-tier:
+    driver: bridge
+
+services:
+  change-ownership:
+    container_name: mattermost-pingdom-plugin-chown
+    image: bitnami/os-shell:latest
+    networks:
+      - mm-tier
+    volumes:
+      - ./volumes/mattermost/data:/mattermost/data:rw
+      - ./volumes/mattermost/logs:/mattermost/logs:rw
+      - ./volumes/mattermost/config:/mattermost/config:rw
+      - ./volumes/mattermost/plugins:/mattermost/plugins:rw
+      - ./volumes/mattermost/client/plugins:/mattermost/client/plugins:rw
+    command:
+      - "/bin/bash"
+      - "-c"
+      - |
+        echo "Trying chmod at /mattermost"
+        chown -R 2000:2000 /mattermost/data
+        chown -R 2000:2000 /mattermost/logs
+        chown -R 2000:2000 /mattermost/config
+        chown -R 2000:2000 /mattermost/plugins
+        chown -R 2000:2000 /mattermost/client/plugins
+
+        ls -la /mattermost
+        echo "Bye"
+
+  postgresql-db:
+    container_name: mattermost-pingdom-plugin-db
+    image: bitnami/postgresql:16.6.0-debian-12-r2
+    restart: unless-stopped
+    security_opt:
+      - no-new-privileges:true
+    tmpfs:
+      - /tmp
+      - /var/tmp
+    volumes:
+      - db-data:/bitnami/postgresql
+    environment:
+      POSTGRESQL_TIMEZONE: UTC
+      POSTGRESQL_DATABASE: mattermost
+      POSTGRESQL_USERNAME: mattermost
+      POSTGRESQL_PASSWORD: mattermost
+    expose:
+      - 5432/tcp
+    networks:
+      - mm-tier
+
+  mattermost:
+    container_name: mattermost-pingdom-plugin-server
+    depends_on:
+      postgresql-db:
+        condition: service_started
+      change-ownership:
+        condition: service_completed_successfully
+    build:
+      context: .
+      dockerfile: Dockerfile
+    restart: unless-stopped
+    environment:
+      - VSCODE_AGENT_FOLDER=/.vscode/.vscode-server
+      # This custom configuration applies only if the values are not already present
+      # in the current server configuration.
+      - MM_CUSTOM_DEFAULTS_PATH=/mattermost/custom.json
+      - MM_SERVICESETTINGS_SITEURL=http://127.0.0.1:8065
+      - MM_SQLSETTINGS_DRIVERNAME=postgres
+      - MM_SQLSETTINGS_DATASOURCE=postgres://mattermost:mattermost@postgresql-db:5432/mattermost?sslmode=disable&connect_timeout=10
+      - MM_LOGSETTINGS_ENABLECONSOLE=true
+      - MM_LOGSETTINGS_CONSOLEJSON=true
+      - MM_LOGSETTINGS_ENABLEFILE=false
+      - MM_LOGSETTINGS_ENABLEWEBHOOKDEBUGGING=true
+      - MM_LOGSETTINGS_ENABLEDIAGNOSTICS=false
+      - MM_SERVICESETTINGS_EXTENDSESSONLENGTHWITHACTIVITY=true
+      - MM_SERVICESETTINGS_ENABLETESTING=true
+      - MM_SERVICESETTINGS_ENABLEDEVELOPER=true
+    ports:
+      - 8065:8065
+      - 8067:8067
+      - 8074:8074
+      - 8075:8075
+    tmpfs:
+      - /tmp
+      - /var/tmp
+    volumes:
+      # Mount the `webapp` from the repo inside /app of the container
+      - ./volumes/mattermost/data:/mattermost/data:rw
+      - ./volumes/mattermost/logs:/mattermost/logs:rw
+      - ./volumes/mattermost/config:/mattermost/config:rw
+      - ./volumes/mattermost/plugins:/mattermost/plugins:rw
+      - ./volumes/mattermost/client/plugins:/mattermost/client/plugins:rw
+      - ./mm-settings/custom.json:/mattermost/custom.json:ro
+      - ../:/app
+    security_opt:
+      - 'no-new-privileges=true'
+    privileged: false
+    networks:
+      - mm-tier
+
+volumes:
+  db-data:

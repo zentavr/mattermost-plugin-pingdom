@@ -1,0 +1,30 @@
+{
+    "id": "com.zentavr.plugin-pingdom-notifications",
+    "name": "Mattermost Pingdom Notifications Plugin",
+    "description": "This plugin serves the API endpoints which accept Pingdom events via webhooks.",
+    "homepage_url": "https://github.com/zentavr/mattermost-plugin-pingdom",
+    "support_url": "https://github.com/zentavr/mattermost-plugin-pingdom/issues",
+    "icon_path": "assets/pingdom-seeklogo.svg",
+    "version": "0.0.1",
+    "min_server_version": "7.5.0",
+    "server": {
+        "executables": {
+            "linux-amd64": "server/dist/plugin-linux-amd64",
+            "linux-arm64": "server/dist/plugin-linux-arm64",
+            "darwin-amd64": "server/dist/plugin-darwin-amd64",
+            "darwin-arm64": "server/dist/plugin-darwin-arm64",
+            "windows-amd64": "server/dist/plugin-windows-amd64.exe"
+        }
+    },
+    "webapp": {
+        "bundle_path": "webapp/dist/main.js"
+    },
+    "settings_schema": {
+        "header": "Configure your Pingdom incoming webhook settings below.",
+        "settings": [{
+            "key": "pingdomConfig",
+            "type": "custom",
+            "display_name": "Pingdom incoming webhook settings:"
+        }]
+    }
+}

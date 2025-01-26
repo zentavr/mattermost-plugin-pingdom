@@ -1,0 +1,10 @@
+{
+  "ServiceSettings": {
+    "EnableLocalMode": true,
+    "LocalModeSocketLocation": "/var/tmp/mattermost_local.socket"
+  },
+  "PluginSettings": {
+    "Enable": true,
+    "EnableUploads": true
+  }
+}
