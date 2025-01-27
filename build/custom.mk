@@ -17,6 +17,15 @@ compose-down:
 compose-ps:
 	cd $(DEVCONTAINER_DIR) && docker compose ps
 
+.PHONY: compose-stop-mattermost compose-start-mattermost compose-restart-mattermost
+compose-stop-mattermost:
+	cd $(DEVCONTAINER_DIR) && docker compose stop mattermost
+
+compose-start-mattermost:
+	cd $(DEVCONTAINER_DIR) && docker compose start mattermost
+
+compose-restart-mattermost: compose-stop-mattermost compose-start-mattermost compose-ps
+
 ## Clean removes all build artifacts of the server.
 .PHONY: clean-server
 clean-server:

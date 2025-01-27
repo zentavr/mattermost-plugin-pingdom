@@ -8,14 +8,16 @@
 // AlertManager URL   :string        alertmanagerurl
 
 import {GlobalState} from '@mattermost/types/store';
+import React from 'react';
 import {Store as BaseStore} from 'redux';
 import {ThunkDispatch} from 'redux-thunk';
+import {WebHookSettingsProps} from '../../components/admin_settings/webhook_config/PingdomWebHook';
 
 export interface CustomComponentProps {
     id: string;
     label: string;
     helpText: JSX.Element | null;
-    value: string;
+    value: string | { [key: string]: WebHookSettingsProps };
     disabled: boolean;
     config?: Record<string, unknown>;
     license?: Record<string, unknown>;
@@ -30,12 +32,36 @@ export interface CustomComponentProps {
 }
 
 export interface PluginRegistry {
+    // Add more if needed from https://developers.mattermost.com/integrate/reference/webapp/webapp-reference
+
+    /**
+    * Register a component to render a custom body for posts with a specific type.
+    * Custom post types must be prefixed with 'custom_'.
+    * Custom post types can also apply for ephemeral posts.
+    * Accepts a string type and a component.
+    * Returns a unique identifier.
+    */
     registerPostTypeComponent(typeName: string, component: React.ElementType);
 
-    // Add more if needed from https://developers.mattermost.com/extend/plugins/webapp/reference
+    /**
+    * Register a custom React component to manage the plugin configuration for the given setting key.
+    * Accepts the following:
+    * - key - A key specified in the settings_schema.settings block of the plugin's manifest.
+    * - component - A react component to render in place of the default handling.
+    * - options - Object for the following available options to display the setting:
+    *     showTitle - Optional boolean that if true the display_name of the setting will be rendered
+    * on the left column of the settings page and the registered component will be displayed on the
+    * available space in the right column.
+    */
     registerAdminConsoleCustomSetting(key: string, component: React.FunctionComponent<CustomComponentProps>, options?: { showTitle: boolean });
 
-    registerAdminConsoleCustomSection(key: string, component: React.FunctionComponent<{ settingsList: ReactNode[]; }>);
+    /**
+    * Register a custom React component to render as a section in the plugin configuration page.
+    * Accepts the following:
+    * - key - A key specified in the settings_schema.sections block of the plugin's manifest.
+    * - component - A react component to render in place of the default handling.
+    */
+    registerAdminConsoleCustomSection(key: string, component: React.FunctionComponent<{ settingsList: React.ReactNode[]; }>);
 }
 
 

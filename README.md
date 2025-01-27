@@ -46,6 +46,30 @@ make clean-server
 make deploy
 ```
 
+#### If you edited plugin.json...
+...you need to rebuild the manifests.
+```shell
+# remove server/manifest.go??
+# remove webapp/src/manifest.ts???
+make apply
+# ...do other stuff
+```
+
+#### If you added a couple of new typescript and need to produce localization strings
+Without populating the string IDs the plugin fails to start in the browser/mattemost-cli. The error in the MM server would
+be something like this:
+```
+Error: [@formatjs/intl] An `id` must be provided to format a message. You can either:
+1. Configure your build toolchain with [babel-plugin-formatjs](https://formatjs.io/docs/tooling/babel-plugin)
+or [@formatjs/ts-transformer](https://formatjs.io/docs/tooling/ts-transformer) OR
+2. Configure your `eslint`
+```
+
+So, extract these into i18n/en.json and translate to the other languages if needed:
+```shell
+make i18n-extract
+```
+
 
 AlertConfigIDChannelID -> PingdomHooksConfigIDChannelID
 webhook.go

@@ -5,7 +5,8 @@
     "EnableUserAccessTokens": true,
     "EnableIncomingWebhooks": true,
     "EnableOutgoingWebhooks": true,
-    "LocalModeSocketLocation": "/var/tmp/mattermost_local.socket"
+    "LocalModeSocketLocation": "/var/tmp/mattermost_local.socket",
+    "ScheduledPosts": false
   },
   "TeamSettings": {
     "EnableUserCreation": true,

@@ -21,10 +21,31 @@
     },
     "settings_schema": {
         "header": "Configure your Pingdom incoming webhook settings below.",
-        "settings": [{
-            "key": "pingdomConfig",
-            "type": "custom",
-            "display_name": "Pingdom incoming webhook settings:"
-        }]
+        "sections": [
+            {
+                "key": "GeneralSettings",
+                "title": "Pingdom webhooks settings",
+                "subtitle": "Settings for the Pingdom Webhooks",
+                "custom": true,
+                "settings": [
+                    {
+                        "key": "WebhookConfig",
+                        "type": "custom",
+                        "display_name": "Pingdom incoming webhook settings.",
+                        "help_text": "Configures incoming webhook from Pingdom",
+                        "hosting": "on-prem"
+                    }
+                ]
+            }
+        ],
+        "settings": [
+            {
+                "key": "WebhookConfig",
+                "type": "custom",
+                "display_name": "Pingdom incoming webhook configuration.",
+                "help_text": "Configures incoming webhook from Pingdom",
+                "hosting": "on-prem"
+            }
+        ]
     }
 }
