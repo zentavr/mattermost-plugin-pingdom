@@ -1,7 +1,30 @@
 {
   "ServiceSettings": {
+    "EnableCommands": true,
     "EnableLocalMode": true,
+    "EnableUserAccessTokens": true,
+    "EnableIncomingWebhooks": true,
+    "EnableOutgoingWebhooks": true,
     "LocalModeSocketLocation": "/var/tmp/mattermost_local.socket"
+  },
+  "TeamSettings": {
+    "EnableUserCreation": true,
+    "EnableOpenServer": false
+  },
+  "LogSettings": {
+    "EnableConsole": true,
+    "ConsoleJson": true,
+    "EnableColor": false,
+    "EnableFile": false,
+    "EnableWebhookDebugging": true
+  },
+  "PasswordSettings": {
+        "MinimumLength": 8,
+        "Lowercase": false,
+        "Number": false,
+        "Uppercase": false,
+        "Symbol": false,
+        "EnableForgotLink": true
   },
   "PluginSettings": {
     "Enable": true,
