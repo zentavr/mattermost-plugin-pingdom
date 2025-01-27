@@ -1,6 +1,6 @@
 {
     "id": "com.zentavr.plugin-pingdom-notifications",
-    "name": "Mattermost Pingdom Notifications Plugin",
+    "name": "Pingdom Notifications",
     "description": "This plugin serves the API endpoints which accept Pingdom events via webhooks.",
     "homepage_url": "https://github.com/zentavr/mattermost-plugin-pingdom",
     "support_url": "https://github.com/zentavr/mattermost-plugin-pingdom/issues",
