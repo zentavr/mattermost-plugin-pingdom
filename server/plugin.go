@@ -7,9 +7,9 @@ import (
 	"path/filepath"
 	"sync"
 
-	pluginapi "github.com/mattermost/mattermost/server/public/pluginapi"
 	"github.com/mattermost/mattermost/server/public/model"
 	"github.com/mattermost/mattermost/server/public/plugin"
+	pluginapi "github.com/mattermost/mattermost/server/public/pluginapi"
 
 	root "github.com/zentavr/mattermost-plugin-pingdom"
 )
@@ -28,7 +28,7 @@ type Plugin struct {
 
 	// key - pingdomHookConfig id, value - existing or created channel id received from api
 	PingdomHooksConfigIDChannelID map[string]string
-	BotUserID              string
+	BotUserID                     string
 
 	// configurationLock synchronizes access to the configuration.
 	configurationLock sync.RWMutex
@@ -62,15 +62,15 @@ func (p *Plugin) OnActivate() error {
 		}
 	}
 
-// 	command, err := p.getCommand()
-// 	if err != nil {
-// 		return fmt.Errorf("failed to get command: %w", err)
-// 	}
-//
-// 	err = p.API.RegisterCommand(command)
-// 	if err != nil {
-// 		return fmt.Errorf("failed to register command: %w", err)
-// 	}
+	command, err := p.getCommand()
+	if err != nil {
+		return fmt.Errorf("failed to get command: %w", err)
+	}
+
+	err = p.API.RegisterCommand(command)
+	if err != nil {
+		return fmt.Errorf("failed to register command: %w", err)
+	}
 
 	return nil
 }
