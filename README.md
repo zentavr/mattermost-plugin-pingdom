@@ -32,6 +32,20 @@ Common make commands for working with plugins
 - `make attach-headless` - Starts a delve process and attaches it to your running plugin.
 - `make clean` - Force deletes the content of build-related files. Use when running into build issues.
 
+### Some hints
+
+#### Rebuild the web application part and redeploy into the mattermost server
+```shell
+make clean-webapp
+make deploy
+```
+
+#### Rebuild the server part and redeploy into the mattermost server
+```shell
+make clean-server
+make deploy
+```
+
 
 AlertConfigIDChannelID -> PingdomHooksConfigIDChannelID
 webhook.go
