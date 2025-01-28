@@ -26,7 +26,7 @@ compose-start-mattermost:
 
 compose-restart-mattermost: compose-stop-mattermost compose-start-mattermost compose-ps
 
-## Clean removes all build artifacts of the server.
+## Removes all build artifacts of the server.
 .PHONY: clean-server
 clean-server:
 	@echo Removing everything in dist/
@@ -39,16 +39,21 @@ else
 	@echo There is no server part in the source code
 endif
 
-## Clean removes all build artifacts of the server.
-.PHONY: clean-webapp
-clean-webapp:
+## Removes all build artifacts of the web application.
+.PHONY: clean-webapp clean-webapp-code
+clean-webapp: clean-webapp-code
+ifneq ($(HAS_WEBAPP),)
+	rm -fr webapp/node_modules
+endif
+
+## Removes all build artifacts except node_modules of the web application.
+clean-webapp-code:
 	@echo Removing everything in dist/
 	rm -fr dist/
 ifneq ($(HAS_WEBAPP),)
 	@echo Removing everything for web application
 	rm -fr webapp/junit.xml
 	rm -fr webapp/dist
-	rm -fr webapp/node_modules
 else
 	@echo There is no web application in the source code
 endif

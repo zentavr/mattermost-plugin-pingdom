@@ -1,8 +1,9 @@
 import classNames from 'classnames';
+import crypto from 'crypto';
 import React, {useState, useEffect} from 'react';
 import {useIntl} from 'react-intl';
 import {leftCol, rightCol, LabelRow, RadioInput, RadioInputLabel} from 'src/components/admin_settings/common';
-import './index.scss';
+import '@/sass/pingdom/module.scss';
 
 export interface WebHookSettingsProps {
     id: string;                 // ID
@@ -50,7 +51,6 @@ const WebHookAttribute = (props: WebHookAttributeProps) => {
         console.debug('regenerateSeed got called');
         event.preventDefault();
 
-        const crypto = require('crypto');
         const seed = crypto.randomBytes(256).toString('base64').replaceAll('+', '').replaceAll('/', '').substring(0, 32);
         let newSettings = {...settings};
         newSettings = {...newSettings, seed: seed};
@@ -68,6 +68,7 @@ const WebHookAttribute = (props: WebHookAttributeProps) => {
     // Input handlers
     const handleWebhookDisabledInput = (event: React.ChangeEvent<HTMLInputElement>) => {
         console.debug('handleWebhookDisabledInput got called');
+
         let newSettings = {...settings};
 
         if (!event.target.value || event.target.value.trim() === '') {
@@ -77,7 +78,7 @@ const WebHookAttribute = (props: WebHookAttributeProps) => {
         }
 
         console.debug('Value handleWebhookDisabledInput: ' + event.target.value);
-        newSettings = {...newSettings, disabled: event.target.value === 'on' };
+        newSettings = {...newSettings, disabled: event.target.value !== 'on' };
         setSettings(newSettings);
         props.onChange(props.id, newSettings);
     }
@@ -131,7 +132,7 @@ const WebHookAttribute = (props: WebHookAttributeProps) => {
                 }</div>
             }
             <div className='pingdom-setting__content'>
-                // Webhook Disabled
+                {/* Webhook Disabled */}
                 <div data-testid={props.id} className='form-group'>
                     <label className={'control-label ' + leftCol}>
                         {formatMessage({defaultMessage: 'Disable Webhook'})}
@@ -168,7 +169,7 @@ const WebHookAttribute = (props: WebHookAttributeProps) => {
                         </div>
                     </div>
                 </div>
-                // Webhook's team
+                {/*  Webhook's team */}
                 <div data-testid={props.id} className='form-group'>
                     <div className={classNames('control-label', leftCol)}>
                         <LabelRow>
@@ -191,7 +192,7 @@ const WebHookAttribute = (props: WebHookAttributeProps) => {
                         </div>
                     </div>
                 </div>
-                // Webhook's channel
+                {/*  Webhook's channel */}
                 <div data-testid={props.id} className='form-group'>
                     <div className={classNames('control-label', leftCol)}>
                         <LabelRow>
@@ -214,7 +215,7 @@ const WebHookAttribute = (props: WebHookAttributeProps) => {
                         </div>
                     </div>
                 </div>
-                // TODO: Seed
+                {/* Seed */}
                 <div data-testid={props.id} className='form-group'>
                     <div className={classNames('control-label', leftCol)}>
                         <LabelRow>
@@ -239,7 +240,7 @@ const WebHookAttribute = (props: WebHookAttributeProps) => {
                         </div>
                     </div>
                 </div>
-                // Pingdom API Token
+                {/* Pingdom API Token  */}
                 <div data-testid={props.id} className='form-group'>
                     <div className={classNames('control-label', leftCol)}>
                         <LabelRow>

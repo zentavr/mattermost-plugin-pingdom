@@ -160,7 +160,7 @@ export default class ConfirmModal extends React.Component<Props, State> {
 
         let cancelText = 'Cancel'
         if (this.props.cancelButtonText) {
-            cancelText = this.props.cancelButtonText;
+            cancelText = this.props.cancelButtonText as string;
         }
 
         let cancelButton;

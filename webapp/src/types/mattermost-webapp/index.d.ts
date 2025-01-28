@@ -13,22 +13,25 @@ import {Store as BaseStore} from 'redux';
 import {ThunkDispatch} from 'redux-thunk';
 import {WebHookSettingsProps} from '../../components/admin_settings/webhook_config/PingdomWebHook';
 
-export interface CustomComponentProps {
+export interface BaseCustomComponentProps {
     id: string;
     label: string;
     helpText: JSX.Element | null;
-    value: string | { [key: string]: WebHookSettingsProps };
     disabled: boolean;
     config?: Record<string, unknown>;
     license?: Record<string, unknown>;
     setByEnv: boolean;
-    onChange: (id: string, value: string | boolean | number, confirm?: boolean, doSubmit?: boolean, warning?: boolean) => void;
     saveAction: () => Promise<unknown>;
     registerSaveAction: (saveAction: () => Promise<{} | {error: {message: string}}>) => void;
     unRegisterSaveAction: (saveAction: () => Promise<unknown>) => void;
     setSaveNeeded: () => void;
     cancelSubmit: () => void;
     showConfirm: boolean;
+}
+
+export interface CommonCustomComponentProps extends BaseCustomComponentProps {
+    onChange: (id: string, value: string | boolean | number, confirm?: boolean, doSubmit?: boolean, warning?: boolean) => void;
+    value: string;
 }
 
 export interface PluginRegistry {

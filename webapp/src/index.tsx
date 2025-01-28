@@ -2,7 +2,7 @@
 // See LICENSE.txt for license information.
 
 import GeneralSettingsSection from '@/components/admin_settings/sections/general_settings';
-//import WebhookActive from '@/components/admin_settings/webhook_active';
+import WebhookConfig from '@/components/admin_settings/webhook_config';
 
 import manifest from '@/manifest';
 import type {PluginRegistry, PluginStore} from '@/types/mattermost-webapp';
@@ -16,9 +16,8 @@ export default class Plugin {
         if (registry.registerAdminConsoleCustomSection) {
             registry.registerAdminConsoleCustomSection('GeneralSettings', GeneralSettingsSection);
         }
-        // TODO: Remove WebhookEnabled and move that into WebhookConfig
-        //registry.registerAdminConsoleCustomSetting('WebhookEnabled', WebhookActive);
-        // TODO: Develop WebhookConfig like in AlertManager
+        // Webhook Configuration Form
+        registry.registerAdminConsoleCustomSetting('WebhookConfig', WebhookConfig);
     }
 }
 

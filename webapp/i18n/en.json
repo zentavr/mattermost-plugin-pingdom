@@ -1,10 +1,25 @@
 {
   "47FYwb": "Cancel",
-  "CUfTTS": "Activate Webhook",
+  "6PgVSe": "Regenerate",
+  "7sDAjP": "This is a secret word that is used to generate the webhook URL. You can generate it by clicking the button below.",
+  "8eLwtK": "Are you sure you want to remove this webhook?",
+  "Cn7BAt": "Pingdom API Token. You can find it in your Pingdom account settings. If not specified, the additional features won't be activated.",
+  "DTKB/w": "Delete Pingdom webhook",
+  "EUDsCG": "Team you want to send messages to. Use the team name such as 'my-team', instead of the display name.",
   "FdZaIl": "Settings for the Pingdom Webhooks",
+  "G/yZLu": "Remove",
+  "HTuGWy": "Disable Webhook",
+  "KgVZsE": "Pingdom API Token",
   "N2IrpM": "Confirm",
   "OvzONl": "Off",
   "Zh+5A6": "On",
   "aj81DV": "When the hook is not enabled, it is not possible to send the data to it.",
-  "voW3lH": "Pingdom webhooks settings"
+  "ew9yu5": "No webhook configurations have been created yet.",
+  "hh0xW7": "Channel Name",
+  "k+kHlN": "Team Name",
+  "kYgECz": "Seed Word",
+  "sqg+7q": "Add new Pingdom webhook",
+  "voW3lH": "Pingdom webhooks settings",
+  "xY3T6F": "Channel you want to send messages to. Use the channel name such as 'town-square', instead of the display name.",
+  "y+ucra": "Attribute cannot be empty"
 }

@@ -1,12 +1,23 @@
-import React, { ChangeEvent, MouseEventHandler, useState, useEffect} from 'react';
-import {useIntl} from 'react-intl';
-import {leftCol, RadioInput, RadioInputLabel, rightCol} from 'src/components/admin_settings/common';
-import {CustomComponentProps} from 'src/types/mattermost-webapp';
-import {WebHookAttribute, WebHookSettingsProps} from './PingdomWebHook';
 import ConfirmModal from '../../widgets/confirmation_modal';
+import React, { useState, useEffect} from 'react';
+import {useIntl} from 'react-intl';
+import {BaseCustomComponentProps} from 'src/types/mattermost-webapp';
+import {WebHookSettingsProps} from './PingdomWebHook';
+
+import classNames from "classnames";
+import WebHookAttribute from './PingdomWebHook';
+
+import '@/sass/pingdom/module.scss';
+
+interface WebhookConfigComponentProps extends BaseCustomComponentProps {
+    onChange: (id: string, value: {[key: string]: WebHookSettingsProps}, confirm?: boolean, doSubmit?: boolean, warning?: boolean) => void;
+    value: {[key: string]: WebHookSettingsProps};
+}
+
+// Refs: https://www.w3schools.com/react/react_usestate.asp
+// TODO: Check Updating Objects and Arrays in State
 
 const emptyWebhook = {
-    // ID
     id: '',
     // Is our webhook enabled
     disabled: false,
@@ -20,20 +31,15 @@ const emptyWebhook = {
     token: ''
 };
 
-const emptySetting = { '0' : emptyWebhook};
-
-// Refs: https://www.w3schools.com/react/react_usestate.asp
-// TODO: Check Updating Objects and Arrays in State
-
-export default function WebhookConfig(props: CustomComponentProps) {
-    const [ settings, setSettings ] = useState<{ [key: string]: WebHookSettingsProps }>(emptySetting);
+export default function WebhookConfig(props: WebhookConfigComponentProps) {
+    const [ settings, setSettings ] = useState(new Map<string, WebHookSettingsProps>());
     const [ isDeleteModalShown, setIsDeleteModalShown ] = useState(false);
     const [ settingIdToDelete, setSettingIdToDelete ] = useState<string>('');
     const {formatMessage} = useIntl();
 
     useEffect(() => {
         // TODO: Check types here
-        // @ts-ignore
+        // =@ts-ignore
         setSettings(initSettings(props.value));
     }, []);
 
@@ -42,32 +48,30 @@ export default function WebhookConfig(props: CustomComponentProps) {
             if(Object.keys(newSettings).length != 0) {
                 const newEntries = Object.entries(newSettings);
 
-                return new Map(newEntries);
+                return new Map<string, WebHookSettingsProps>(newEntries);
             }
         }
 
-        return new Map(Object.entries(emptySetting));
+        const emptySetting:{[key: string]: WebHookSettingsProps} = { '0' : emptyWebhook};
+        return new Map<string, WebHookSettingsProps>(Object.entries(emptySetting));
     }
 
-    // TODO: Fix an error
     const handleChange = (id: string, attribute: WebHookSettingsProps) => {
         let newSettings = settings;
-        //newSettings.set(id, attribute);
-        newSettings[id] = attribute;
+        newSettings.set(id, attribute);
         setSettings(newSettings);
         props.onChange(props.id, Object.fromEntries(newSettings));
         props.setSaveNeeded();
     }
 
-    const handleAddButtonClick = (e: MouseEventHandler<HTMLButtonElement, MouseEvent>) => {
-        e.preventDefault();
+    const handleAddButtonClick = (event: React.MouseEvent<HTMLButtonElement>) => {
+        event.preventDefault();
         console.debug('Add New Webhook Button Clicked');
 
-        const nextKey = settings.size === 0 ? '0' :(parseInt([...settings.keys()].pop()) + 1).toString();
+        const nextKey = settings.size === 0 ? '0' : (parseInt([...settings.keys()].pop() as string) + 1).toString();
 
         let newSettings = settings;
-        //newSettings.set(nextKey, emptyWebhook);
-        newSettings[nextKey] = emptyWebhook;
+        newSettings.set(nextKey, emptyWebhook);
 
         setSettings(newSettings);
 
@@ -75,7 +79,7 @@ export default function WebhookConfig(props: CustomComponentProps) {
         props.setSaveNeeded();
     }
 
-     const handleDelete = (id: string) => {
+    const handleDelete = (id: string) => {
         let newSettings = settings;
         newSettings.delete(id);
 
@@ -91,12 +95,15 @@ export default function WebhookConfig(props: CustomComponentProps) {
         setSettingIdToDelete(id);
     }
 
-    // TODO
     const renderSettings = () => {
+        console.debug('renderSettings got called');
+        console.debug('settings: ' + settings);
+
         if(settings.size === 0) {
+            console.debug('No settings found');
             return (
                 <div className='alert-warning'>{formatMessage(
-                    {defaultMessage: 'No alert webhook configurations have been created yet.'}
+                    {defaultMessage: 'No webhook configurations have been created yet.'}
                 )}</div>
             );
         }
@@ -113,24 +120,24 @@ export default function WebhookConfig(props: CustomComponentProps) {
                     }}
                 />
             );
-        };
+        });
     }
 
     // Return the form back into Admin Panel
     return (
         <div data-webhook-config-id={props.id} className='form-group'>
             {renderSettings()}
-            // Display Add Button
-            <div className={rightCol}>
+            {/* Display Add Button */}
+            <div className={classNames('pingdom-setting__wrapper')}>
                 <button
-                    className='pingdom-settings__add-button btn btn-primary'
+                    className={classNames('pingdom-settings__add-button', 'btn', 'btn-primary')}
                     onClick={handleAddButtonClick}
-                >{formatMessage({defaultMessage: 'Add new webhook'})}</button>
+                >{formatMessage({defaultMessage: 'Add new Pingdom webhook'})}</button>
             </div>
-            // Display Delete Modal
+            {/* Display Delete Modal */}
             <ConfirmModal
                 show={isDeleteModalShown}
-                title={formatMessage({defaultMessage: 'Delete webhook'})}
+                title={formatMessage({defaultMessage: 'Delete Pingdom webhook'})}
                 message={
                     formatMessage({defaultMessage: 'Are you sure you want to remove this webhook?'})
                 }

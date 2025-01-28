@@ -1,9 +1,7 @@
 // Copyright (c) 2020-present Mattermost, Inc. All Rights Reserved.
 // See LICENSE.txt for license information.
 
-import React, {ReactNode} from 'react';
 import GenericModal from 'src/components/generic_modal';
-import CompassIcon from 'src/components/icons/compassIcon';
 import styled from 'styled-components';
 
 export const leftCol = 'col-sm-4';
@@ -16,13 +14,6 @@ export const LabelRow = styled.div`
 export const Label = styled.span`
     margin-right: 8px;
 `;
-
-export const EnterprisePill = ({children}: {children: ReactNode}) => (
-    <Enterprise>
-        <CompassIcon icon={'key-variant'}/>
-        {children}
-    </Enterprise>
-);
 
 const Enterprise = styled.div`
     position: relative;
