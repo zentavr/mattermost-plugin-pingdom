@@ -9,7 +9,7 @@ const emptyWebhook = {
     // ID
     id: '',
     // Is our webhook enabled
-    webhookenabled: true,
+    disabled: false,
     // Mattermost channel where to send an alert
     channel: '',
     // Mattermost team/org
