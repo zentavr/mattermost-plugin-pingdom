@@ -2,23 +2,22 @@ import ConfirmModal from '../../widgets/confirmation_modal';
 import React, { useState, useEffect} from 'react';
 import {useIntl} from 'react-intl';
 import {BaseCustomComponentProps} from 'src/types/mattermost-webapp';
-import {WebHookSettingsProps} from './PingdomWebHook';
+import {WebhookMattermostAttributes} from './PingdomWebHook';
 
 import classNames from "classnames";
-import WebHookAttribute from './PingdomWebHook';
+import PingdomWebhookConfig from './PingdomWebHook';
 
 import '@/sass/pingdom/module.scss';
 
 interface WebhookConfigComponentProps extends BaseCustomComponentProps {
-    onChange: (id: string, value: {[key: string]: WebHookSettingsProps}, confirm?: boolean, doSubmit?: boolean, warning?: boolean) => void;
-    value: {[key: string]: WebHookSettingsProps};
+    onChange: (id: string, value: {[key: string]: WebhookMattermostAttributes}, confirm?: boolean, doSubmit?: boolean, warning?: boolean) => void;
+    value: {[key: string]: WebhookMattermostAttributes};
 }
 
 // Refs: https://www.w3schools.com/react/react_usestate.asp
 // TODO: Check Updating Objects and Arrays in State
 
-const emptyWebhook = {
-    id: '',
+const emptyWebhook: WebhookMattermostAttributes = {
     // Is our webhook enabled
     disabled: false,
     // Mattermost channel where to send an alert
@@ -32,31 +31,29 @@ const emptyWebhook = {
 };
 
 export default function WebhookConfig(props: WebhookConfigComponentProps) {
-    const [ settings, setSettings ] = useState(new Map<string, WebHookSettingsProps>());
+    const [ settings, setSettings ] = useState(new Map<string, WebhookMattermostAttributes>());
     const [ isDeleteModalShown, setIsDeleteModalShown ] = useState(false);
     const [ settingIdToDelete, setSettingIdToDelete ] = useState<string>('');
     const {formatMessage} = useIntl();
 
     useEffect(() => {
-        // TODO: Check types here
-        // =@ts-ignore
         setSettings(initSettings(props.value));
     }, []);
 
-    const initSettings = (newSettings: { [key: string]: WebHookSettingsProps }) => {
+    const initSettings = (newSettings: { [key: string]: WebhookMattermostAttributes }) => {
         if(!!newSettings) {
             if(Object.keys(newSettings).length != 0) {
                 const newEntries = Object.entries(newSettings);
 
-                return new Map<string, WebHookSettingsProps>(newEntries);
+                return new Map<string, WebhookMattermostAttributes>(newEntries);
             }
         }
 
-        const emptySetting:{[key: string]: WebHookSettingsProps} = { '0' : emptyWebhook};
-        return new Map<string, WebHookSettingsProps>(Object.entries(emptySetting));
+        const emptySetting = { '0' : emptyWebhook};
+        return new Map<string, WebhookMattermostAttributes>(Object.entries(emptySetting));
     }
 
-    const handleChange = (id: string, attribute: WebHookSettingsProps) => {
+    const handleChange = (id: string, attribute: WebhookMattermostAttributes) => {
         let newSettings = settings;
         newSettings.set(id, attribute);
         setSettings(newSettings);
@@ -97,19 +94,19 @@ export default function WebhookConfig(props: WebhookConfigComponentProps) {
 
     const renderSettings = () => {
         console.debug('renderSettings got called');
-        console.debug('settings: ' + settings);
+        console.debug('renderSettings/settings: ' + JSON.stringify(settings));
 
         if(settings.size === 0) {
-            console.debug('No settings found');
+            console.debug('No settings loaded/found');
             return (
-                <div className='alert-warning'>{formatMessage(
-                    {defaultMessage: 'No webhook configurations have been created yet.'}
-                )}</div>
+                <div className='alert-warning'>{formatMessage({defaultMessage: 'No webhook configurations have been created yet.'})}</div>
             );
         }
         return Array.from(settings, ([key, value], index) => {
+            console.debug('From renderSettings to WebHookAttribute (key + value): ' + key + ' ' + JSON.stringify(value));
+            console.debug('From renderSettings to WebHookAttribute (index): ' + JSON.stringify(index));
             return (
-                <WebHookAttribute
+                <PingdomWebhookConfig
                     key={key}
                     id={key}
                     orderNumber={index}

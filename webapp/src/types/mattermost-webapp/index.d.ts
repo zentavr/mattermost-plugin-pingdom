@@ -1,17 +1,10 @@
 // Copyright (c) 2015-present Mattermost, Inc. All Rights Reserved.
 // See LICENSE.txt for license information.
 
-// id                 :int
-// Team Name          :string        team
-// Channel Name       :string        channel
-// Token              :generate      token
-// AlertManager URL   :string        alertmanagerurl
-
 import {GlobalState} from '@mattermost/types/store';
 import React from 'react';
 import {Store as BaseStore} from 'redux';
 import {ThunkDispatch} from 'redux-thunk';
-import {WebHookSettingsProps} from '../../components/admin_settings/webhook_config/PingdomWebHook';
 
 export interface BaseCustomComponentProps {
     id: string;
@@ -56,7 +49,7 @@ export interface PluginRegistry {
     * on the left column of the settings page and the registered component will be displayed on the
     * available space in the right column.
     */
-    registerAdminConsoleCustomSetting(key: string, component: React.FunctionComponent<CustomComponentProps>, options?: { showTitle: boolean });
+    registerAdminConsoleCustomSetting<T>(key: string, component: React.FunctionComponent<T>, options?: { showTitle: boolean });
 
     /**
     * Register a custom React component to render as a section in the plugin configuration page.

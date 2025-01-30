@@ -5,47 +5,73 @@ import {useIntl} from 'react-intl';
 import {leftCol, rightCol, LabelRow, RadioInput, RadioInputLabel} from 'src/components/admin_settings/common';
 import '@/sass/pingdom/module.scss';
 
-export interface WebHookSettingsProps {
-    id: string;                 // ID
-    disabled: boolean;          // Is our webhook enabled
-    channel: string;            // Mattermost channel where to send an alert
-    team: string;               // Mattermost team/org
-    seed: string;               // The secret seed phrase, which is used as a suffix for the webhook
-    token: string;              // Pingdom token to use when talking to Pingdom API
-}
+export type WebhookMattermostAttributes = {
+  disabled: boolean;          // If our webhook should be disabled
+  channel: string;            // Mattermost channel where send an alert to
+  team: string;               // Mattermost team/org
+  seed: string;               // The secret seed phrase, which is used as a suffix for the webhook
+  token: string;              // Pingdom token to use when talking to Pingdom API
+};
+
+const initErrors = {
+    teamError: false,
+    channelError: false,
+    seedError: false,
+};
 
 interface WebHookAttributeProps {
     id: string;
+    key: string;
     orderNumber: number;
-    attributes: WebHookSettingsProps;
-    onChange: (id: string, attribute: WebHookSettingsProps) => void;
+    attributes: WebhookMattermostAttributes;
+    onChange: (id: string, attribute: WebhookMattermostAttributes) => void;
     onDelete: (id: string) => void;
 }
 
-const WebHookAttribute = (props: WebHookAttributeProps) => {
-    const initialSettings:WebHookSettingsProps = (props.attributes === undefined || Object.keys(props.attributes).length === 0) ? {
-        id: '',
-        disabled: false,
-        channel: '',
-        team: '',
-        seed: '',
-        token: ''
-    } : {
-        id: props.attributes.id ?? '',
-        disabled: props.attributes.disabled ?? false,
-        channel: props.attributes.channel ?? '',
-        team: props.attributes.team ?? '',
-        seed: props.attributes.seed ?? '',
-        token: props.attributes.token ?? ''
+function validateWebhookConfiguration(attributes: WebhookMattermostAttributes) {
+    // Start with all errors = false
+    const errors = { ...initErrors };
+
+    if (!attributes.channel || attributes.channel.trim() === '') {
+        errors.channelError = true;
+    }
+    if (!attributes.team || attributes.team.trim() === '') {
+        errors.teamError = true;
+    }
+    if (!attributes.seed || attributes.seed.trim() === '') {
+        errors.seedError = true;
+    }
+    return errors;
+}
+
+const PingdomWebhookConfig = (props: WebHookAttributeProps) => {
+    console.debug('WebHookAttribute got called');
+    console.debug('props: ' + JSON.stringify(props));
+    const initialSettings: WebhookMattermostAttributes = (props.attributes === undefined || Object.keys(props.attributes).length === 0) ?
+        {
+          disabled: false,
+          channel: '',
+          team: '',
+          seed: '',
+          token: ''
+        } :
+        {
+          disabled: props.attributes.disabled ?? false,
+          channel: props.attributes.channel ?? '',
+          team: props.attributes.team ?? '',
+          seed: props.attributes.seed ?? '',
+          token: props.attributes.token ?? ''
     };
-    const initErrors = {
-        disabledError: false,
-        teamError: false,
-        channelError: false
-    };
+
     const [ settings, setSettings ] = useState(initialSettings);
     const [ hasError, setHasError ] = useState(initErrors);
     const {formatMessage} = useIntl();
+
+    // Check the `attributes` whenever they change
+    useEffect(() => {
+        const newErrors = validateWebhookConfiguration(props.attributes);
+        setHasError(newErrors);
+    }, [props.attributes]);
 
     const regenerateSeed = (event: React.MouseEvent<HTMLButtonElement>) => {
         console.debug('regenerateSeed got called');
@@ -54,6 +80,11 @@ const WebHookAttribute = (props: WebHookAttributeProps) => {
         const seed = crypto.randomBytes(256).toString('base64').replaceAll('+', '').replaceAll('/', '').substring(0, 32);
         let newSettings = {...settings};
         newSettings = {...newSettings, seed: seed};
+        console.debug('regenerateSeed/New seed: ' + seed);
+        console.debug('regenerateSeed/New settings: ' + JSON.stringify(newSettings));
+        console.debug('regenerateSeed/props.id: ' + JSON.stringify(props.id));
+        setHasError({...hasError, seedError: false});
+        setSettings(newSettings);
         props.onChange(props.id, newSettings);
     };
 
@@ -62,36 +93,32 @@ const WebHookAttribute = (props: WebHookAttributeProps) => {
     }
 
     const hasAnyError = () => {
-        return Object.values(hasError).findIndex(item => item) !== -1;
+        console.debug('PingdomWebHook/hasAnyError/hasError value: ' + JSON.stringify(hasError));
+        const result =  Object.values(hasError).findIndex(item => item) !== -1;
+        console.debug('PingdomWebHook/hasAnyError/result: ' + result);
+        return result;
     }
 
     // Input handlers
     const handleWebhookDisabledInput = (event: React.ChangeEvent<HTMLInputElement>) => {
         console.debug('handleWebhookDisabledInput got called');
+        console.debug('PingdomWebHook/handleWebhookDisabledInput/event.target.value: ' + event.target.value);
+        console.debug('PingdomWebHook/handleWebhookDisabledInput/typeOf event.target.value: ' + JSON.stringify(typeof event.target.value));
 
         let newSettings = {...settings};
-
-        if (!event.target.value || event.target.value.trim() === '') {
-            setHasError({...hasError, disabledError: true});
-        } else {
-            setHasError({...hasError, disabledError: false});
-        }
-
-        console.debug('Value handleWebhookDisabledInput: ' + event.target.value);
-        newSettings = {...newSettings, disabled: event.target.value !== 'on' };
+        newSettings = {...newSettings, disabled: event.target.value === 'true' };
         setSettings(newSettings);
         props.onChange(props.id, newSettings);
     }
 
     const handleWebhookChannelInput = (event: React.ChangeEvent<HTMLInputElement>) => {
         console.debug('handleWebhookChannelInput got called');
-        let newSettings = {...settings};
         if (!event.target.value || event.target.value.trim() === '') {
             setHasError({...hasError, channelError: true});
         } else {
             setHasError({...hasError, channelError: false});
         }
-
+        let newSettings = {...settings};
         newSettings = {...newSettings, channel: event.target.value};
         setSettings(newSettings);
         props.onChange(props.id, newSettings);
@@ -99,12 +126,12 @@ const WebHookAttribute = (props: WebHookAttributeProps) => {
 
     const handleWebhookTeamInput = (event: React.ChangeEvent<HTMLInputElement>) => {
         console.debug('handleWebhookTeamInput got called');
-        let newSettings = {...settings};
         if (!event.target.value || event.target.value.trim() === '') {
             setHasError({...hasError, teamError: true});
         } else {
             setHasError({...hasError, teamError: false});
         }
+        let newSettings = {...settings};
         newSettings = {...newSettings, team: event.target.value};
         setSettings(newSettings);
         props.onChange(props.id, newSettings);
@@ -118,9 +145,11 @@ const WebHookAttribute = (props: WebHookAttributeProps) => {
         props.onChange(props.id, newSettings);
     }
 
-    const hookDisabled = props.attributes.disabled ? 'off' : 'on';
+    console.debug('PingdomWebHook/typeOf field/disabled: ' + JSON.stringify(typeof props.attributes.disabled));
+    console.debug('PingdomWebHook/value of field/disabled: ' + JSON.stringify(props.attributes.disabled));
+    console.debug('PingdomWebHook/value of settings: ' + JSON.stringify(settings));
     return (
-        <div id={`setting_${props.id}`} className={classNames('pingdom-setting', {'pingdom-setting--with-error': hasAnyError})}>
+        <div id={`setting_${props.id}`} className={classNames('pingdom-setting', {'pingdom-setting--with-error': hasAnyError()})}>
             <div className='pingdom-setting__controls'>
                 <div className='pingdom-setting__order-number'>{`#${props.id}`}</div>
                 <div id={`delete_${props.id}`} className='delete-setting btn btn-default'
@@ -138,29 +167,29 @@ const WebHookAttribute = (props: WebHookAttributeProps) => {
                         {formatMessage({defaultMessage: 'Disable Webhook'})}
                     </label>
                     <div className={rightCol}>
-                        <RadioInputLabel $disabled={settings.disabled}>
+                        <RadioInputLabel $disabled={false}>
                             <RadioInput
-                                data-testid={settings.id + '_on'}
+                                data-testid={props.id + '_true'}
                                 type='radio'
-                                value='on'
-                                id={'disabled' + '.' + settings.id + '_on'}
-                                name={'disabled' + '.' + settings.id + '_on'}
-                                checked={hookDisabled === 'on'}
+                                value='true'
+                                id={'disabled' + '.' + props.id + '_true'}
+                                name={'disabled' + '.' + props.id + '_true'}
+                                checked={props.attributes.disabled}
                                 onChange={handleWebhookDisabledInput}
-                                disabled={settings.disabled}
+                                disabled={false}
                             />
                             {formatMessage({defaultMessage: 'On'})}
                         </RadioInputLabel>
-                        <RadioInputLabel $disabled={settings.disabled}>
+                        <RadioInputLabel $disabled={false}>
                             <RadioInput
-                                data-testid={settings.id + '_off'}
+                                data-testid={props.id + '_false'}
                                 type='radio'
-                                value='off'
-                                id={'disabled' + '.' + settings.id + '_off'}
-                                name={'disabled' + '.' + settings.id + '_off'}
-                                checked={hookDisabled === 'off'}
+                                value='false'
+                                id={'disabled' + '.' + props.id + '_false'}
+                                name={'disabled' + '.' + props.id + '_false'}
+                                checked={!props.attributes.disabled}
                                 onChange={handleWebhookDisabledInput}
-                                disabled={settings.disabled}
+                                disabled={false}
                             />
                             {formatMessage({defaultMessage: 'Off'})}
                         </RadioInputLabel>
@@ -181,7 +210,7 @@ const WebHookAttribute = (props: WebHookAttributeProps) => {
                     <div className={rightCol}>
                         <input
                             data-testid={props.id + 'input'}
-                            id={'team' + '.' + settings.id}
+                            id={'team' + '.' + props.id}
                             className='form-control'
                             type={'input'}
                             value={settings.team}
@@ -204,7 +233,7 @@ const WebHookAttribute = (props: WebHookAttributeProps) => {
                     <div className={rightCol}>
                         <input
                             data-testid={props.id + 'input'}
-                            id={'channel' + '.' + settings.id}
+                            id={'channel' + '.' + props.id}
                             className='form-control'
                             type={'input'}
                             value={settings.channel}
@@ -225,7 +254,7 @@ const WebHookAttribute = (props: WebHookAttributeProps) => {
                         </LabelRow>
                     </div>
                     <div className={rightCol}>
-                        <div id={'seed' + '.' + settings.id} className={classNames('form-control', 'disabled')}>
+                        <div id={'seed' + '.' + props.id} className={classNames('form-control', 'disabled')}>
                             {settings.seed !== undefined && settings.seed !== '' ? settings.seed :
                                 <span className="placeholder-text"></span>}
                         </div>
@@ -252,7 +281,7 @@ const WebHookAttribute = (props: WebHookAttributeProps) => {
                     <div className={rightCol}>
                         <input
                             data-testid={props.id + 'input'}
-                            id={'token' + '.' + settings.id}
+                            id={'token' + '.' + props.id}
                             className='form-control'
                             type={'input'}
                             value={settings.token}
@@ -268,4 +297,4 @@ const WebHookAttribute = (props: WebHookAttributeProps) => {
     );
 }
 
-export default WebHookAttribute;
+export default PingdomWebhookConfig;
