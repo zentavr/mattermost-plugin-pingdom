@@ -1,5 +1,5 @@
 {
-    "id": "com.zentavr.plugin-pingdom-notifications",
+    "id": "com.zentavr.pingdom",
     "name": "Pingdom Notifications",
     "description": "This plugin serves the API endpoints which accept Pingdom events via webhooks.",
     "homepage_url": "https://github.com/zentavr/mattermost-plugin-pingdom",
@@ -29,7 +29,7 @@
                 "custom": true,
                 "settings": [
                     {
-                        "key": "WebhookConfig",
+                        "key": "PingdomHooksConfigs",
                         "type": "custom",
                         "display_name": "Pingdom incoming webhook settings.",
                         "help_text": "Configures incoming webhook from Pingdom",
@@ -40,7 +40,7 @@
         ],
         "settings": [
             {
-                "key": "WebhookConfig",
+                "key": "PingdomHooksConfigs",
                 "type": "custom",
                 "display_name": "Pingdom incoming webhook configuration.",
                 "help_text": "Configures incoming webhook from Pingdom",

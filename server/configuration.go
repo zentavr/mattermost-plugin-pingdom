@@ -4,7 +4,7 @@ import (
 	"errors"
 	"fmt"
 	"reflect"
-//	"strings"
+	//	"strings"
 )
 
 // configuration captures the plugin's external configuration as exposed in the Mattermost server
@@ -23,10 +23,12 @@ type configuration struct {
 }
 
 type pingdomHookConfig struct {
-	ID              string
-	Token           string
-	Channel         string
-	Team            string
+	ID       string
+	Disabled bool
+	Channel  string
+	Token    string
+	Seed     string
+	Team     string
 }
 
 func (ac *pingdomHookConfig) IsValid() error {
@@ -38,8 +40,12 @@ func (ac *pingdomHookConfig) IsValid() error {
 		return errors.New("must set a Channel")
 	}
 
-	if ac.Token == "" {
-		return errors.New("must set a Token")
+	//if ac.Token == "" {
+	//	return errors.New("must set a Token")
+	//}
+
+	if ac.Seed == "" {
+		return errors.New("must set a Seed")
 	}
 
 	return nil

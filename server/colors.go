@@ -1,7 +1,7 @@
 package main
 
 const (
-	colorFiring   = "#FF0000" // green
-	colorResolved = "#008000" // gray
+	colorFiring   = "#FF0000" // red
+	colorResolved = "#148031" // green
 	colorExpired  = "#F0F8FF" // aliceBlue
 )
