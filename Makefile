@@ -344,12 +344,19 @@ endif
 .PHONY: i18n-extract
 i18n-extract:
 ifneq ($(HAS_WEBAPP),)
-ifeq ($(HAS_MM_UTILITIES),)
-	@echo "You must clone github.com/mattermost/mattermost-utilities repo in .. to use this command"
-else
-	cd $(MM_UTILITIES_DIR) && npm install && npm run babel && node mmjstool/build/index.js i18n extract-webapp --webapp-dir $(PWD)/webapp
+#ifeq ($(HAS_MM_UTILITIES),)
+#	@echo "You must clone github.com/mattermost/mattermost-utilities repo in .. to use this command"
+#else
+#	cd $(MM_UTILITIES_DIR) && npm install && npm run babel && node mmjstool/build/index.js i18n extract-webapp --webapp-dir $(PWD)/webapp
+#endif
+	cd webapp && $(NPM) run extract
 endif
-endif
+
+## Check i18 files
+.PHONY: i18n-check
+i18n-check:
+	@echo Checking i18n files
+	cd webapp && $(NPM) run extract && git --no-pager diff --exit-code i18n/en.json || (echo "Missing translations. Please run \"make i18n-extract\" and commit the changes." && exit 1)
 
 ## Disable the plugin.
 .PHONY: disable

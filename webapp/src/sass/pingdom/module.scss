@@ -1,0 +1,54 @@
+@charset "utf-8";
+
+@import "variables";
+
+.pingdom-setting__wrapper {
+    display: flex;
+    flex-direction: column;
+}
+.setting-row {
+    display: flex;
+    flex-direction: row;
+    width: 100%;
+}
+.delete-setting {
+    cursor: pointer;
+    height: 29px;
+    width: 30px;
+    margin-bottom: 15px;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+}
+.pingdom-setting {
+    display: flex;
+    flex-direction: column;
+    border: 1px solid rgba(0, 0, 0, 0.15);
+    padding: 15px;
+    margin-bottom: 15px;
+}
+.pingdom-setting__controls {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    margin-bottom: 15px;
+}
+.pingdom-setting--with-error {
+    border: 1px solid red;
+}
+.pingdom-setting__error-text {
+    color: red;
+    font-weight: 600;
+}
+.pingdom-setting__content {
+    display: flex;
+    flex-direction: column;
+}
+.no-settings-pingdom {
+    margin-bottom: 15px;
+}
+.pingdom-setting__order-number {
+    font-weight: 600;
+    font-size: 16px;
+}

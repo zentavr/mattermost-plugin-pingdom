@@ -13,3 +13,5 @@ server/manifest.go
 .vscode
 
 .env
+
+.examples

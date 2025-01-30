@@ -47,6 +47,8 @@ services:
       POSTGRESQL_PASSWORD: mattermost
     expose:
       - 5432/tcp
+    ports:
+      - 127.0.0.1:65432:5432/tcp
     networks:
       - mm-tier
 

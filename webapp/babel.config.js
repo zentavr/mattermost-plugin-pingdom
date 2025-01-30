@@ -25,7 +25,25 @@ const config = {
         }],
     ],
     plugins: [
+        '@babel/plugin-proposal-class-properties',
+        '@babel/plugin-syntax-dynamic-import',
+        '@babel/proposal-object-rest-spread',
+        '@babel/plugin-proposal-optional-chaining',
         'babel-plugin-typescript-to-proptypes',
+        [
+            'babel-plugin-styled-components',
+            {
+                ssr: false,
+                fileName: false,
+            },
+        ],
+        [
+            'formatjs',
+            {
+                idInterpolationPattern: '[sha512:contenthash:base64:6]',
+                ast: true,
+            },
+        ],
     ],
 };
 
