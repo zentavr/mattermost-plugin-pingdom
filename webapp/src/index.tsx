@@ -17,7 +17,7 @@ export default class Plugin {
             registry.registerAdminConsoleCustomSection('GeneralSettings', GeneralSettingsSection);
         }
         // Webhook Configuration Form
-        registry.registerAdminConsoleCustomSetting('WebhookConfig', WebhookConfig);
+        registry.registerAdminConsoleCustomSetting('PingdomHooksConfigs', WebhookConfig);
     }
 }
 
