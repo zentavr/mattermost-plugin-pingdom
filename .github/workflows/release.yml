@@ -35,16 +35,10 @@ jobs:
         id: tag
         run: echo "tag_name=${GITHUB_REF#refs/*/}" >> "$GITHUB_OUTPUT"
 
-      - name: Install Cosign
-        uses: sigstore/cosign-installer@v3.7.0
-
       - name: Import GPG Key
         run: |
           # Import the key from the environment variable:
           echo "$GPG_PRIVATE_KEY" | gpg --batch --yes --import
-
-          # Optional: trust the key if necessary (unattended trust)
-          # echo "5\ny\nsave\n" | gpg --command-fd 0 --batch --edit-key "$GPG_KEY_ID" trust
         env:
           GPG_PRIVATE_KEY: ${{ secrets.GPG_PRIVATE_KEY }}
 
