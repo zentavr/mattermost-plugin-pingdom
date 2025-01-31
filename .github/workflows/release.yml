@@ -39,7 +39,7 @@ jobs:
         id: tag
         run: echo "tag_name=${GITHUB_REF#refs/*/}" >> "$GITHUB_OUTPUT"
 
-      - name: Import GPG Key
+      - name: Prepare GNUPGHOME
         run: |
           # Only run if GNUPGHOME is set and not empty
           if [ -n "$GNUPGHOME" ]; then
@@ -55,20 +55,49 @@ jobs:
           else
             echo "GNUPGHOME is not set or is empty; skipping creation."
           fi
-
-          # Import the key from the environment variable:
-          echo "$GPG_PRIVATE_KEY" | gpg --batch --yes --import
-
           # Ensure GPG can use the passphrase from the environment
-          echo "use-agent" >> "$GNUPGHOME"/gpg.conf
+          echo "pinentry-mode loopback" >> "$GNUPGHOME"/gpg.conf
           echo "allow-loopback-pinentry" >> "$GNUPGHOME"/gpg.conf
           echo "trust-model always" >> "$GNUPGHOME"/gpg.conf
           echo "disable-ssh-support" >> "$GNUPGHOME/gpg.conf"
 
-          # list keys to verify import
-          gpg --list-secret-keys --keyid-format LONG
-        env:
-          GPG_PRIVATE_KEY: ${{ secrets.GPG_PRIVATE_KEY }}
+      - name: Import GPG Key
+        uses: crazy-max/ghaction-import-gpg@v6.2.0
+        with:
+          gpg_private_key: ${{ secrets.GPG_PRIVATE_KEY }}
+          passphrase: ${{ secrets.GPG_PASSPHRASE }}
+          trust_level: 5
+
+#      - name: Import GPG Key
+#        run: |
+#          # Only run if GNUPGHOME is set and not empty
+#          if [ -n "$GNUPGHOME" ]; then
+#            # Check if the directory does not exist
+#            if [ ! -d "$GNUPGHOME" ]; then
+#              echo "Creating $GNUPGHOME directory..."
+#              mkdir -p "$GNUPGHOME"
+#              chmod 700 "$GNUPGHOME"
+#              echo "Directory $GNUPGHOME created with permissions 700."
+#            else
+#              echo "Directory $GNUPGHOME already exists."
+#            fi
+#          else
+#            echo "GNUPGHOME is not set or is empty; skipping creation."
+#          fi
+#
+#          # Import the key from the environment variable:
+#          echo "$GPG_PRIVATE_KEY" | gpg --batch --yes --import
+#
+#          # Ensure GPG can use the passphrase from the environment
+#          echo "use-agent" > "$GNUPGHOME"/gpg.conf
+#          echo "allow-loopback-pinentry" >> "$GNUPGHOME"/gpg.conf
+#          echo "trust-model always" >> "$GNUPGHOME"/gpg.conf
+#          echo "disable-ssh-support" >> "$GNUPGHOME/gpg.conf"
+#
+#          # list keys to verify import
+#          gpg --list-secret-keys --keyid-format LONG
+#        env:
+#          GPG_PRIVATE_KEY: ${{ secrets.GPG_PRIVATE_KEY }}
 
       - name: Run GoReleaser
         id: run-goreleaser
@@ -91,6 +120,8 @@ jobs:
           set -euo pipefail
           checksum_file=$(echo "$ARTIFACTS" | jq -r '.[] | select (.type=="Checksum") | .path')
           echo "hashes=$(cat $checksum_file | base64 -w0)" >> "$GITHUB_OUTPUT"
+
+      - uses: eviden-actions/clean-self-hosted-runner@v1.3.21
 
   provenance:
     needs:
