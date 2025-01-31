@@ -66,3 +66,7 @@ sign:
 
 	@echo plugin dist at: dist/$(BUNDLE_NAME)
 	@echo plugin sign at: dist/$(BUNDLE_NAME).sig
+
+.PHONY: gorelease
+gorelease:
+	GPG_SIGNATURE_KEY_ID=$(GPG_SIGNATURE_KEY_ID) goreleaser release --skip publish --clean

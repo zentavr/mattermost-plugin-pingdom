@@ -9,39 +9,38 @@ before:
   hooks:
     - make clean
     - make dist
-#    - |
-#      sh -c "gpg --batch --yes
-#        -u ${GPG_SIGNATURE_KEY_ID}
-#        --pinentry-mode loopback
-#        --passphrase \"$GPG_PASSPHRASE\"
-#        --detach-sign
-#        --verbose --personal-digest-preferences SHA256
-#        -o dist/com.zentavr.pingdom-{{ .Version }}.sig
-#        dist/com.zentavr.pingdom-{{ .Version }}.tar.gz"
+    - |
+      gpg --batch --yes \
+        -u ${GPG_SIGNATURE_KEY_ID} \
+        --passphrase "$GPG_PASSPHRASE" \
+        --detach-sign \
+        --verbose --personal-digest-preferences SHA256 \
+        -o dist/com.zentavr.pingdom-{{ .Version }}.sig \
+        dist/com.zentavr.pingdom-{{ .Version }}.tar.gz
 
-binary_signs:
-  - id: default
-    artifacts: binary
-    signature: "${artifact}.sig"
-    cmd: gpg
-    args:
-      - "--batch"
-      - "--yes"
-      - "-u"
-      - "{{ .Env.GPG_SIGNATURE_KEY_ID }}"
-      - "--pinentry-mode"
-      - "loopback"
-#      - "--passphrase"
-#      - "$GPG_PASSPHRASE"
-      - "--detach-sign"
-      - "--verbose"
-      - "--personal-digest-preferences"
-      - "SHA256"
-      - "--output"
-      - "${signature}"
-      - "${artifact}"
-    stdin: "{{ .Env.GPG_PASSPHRASE }}"
-    output: true
+#binary_signs:
+#  - id: default
+#    artifacts: binary
+#    signature: "${artifact}.sig"
+#    cmd: gpg
+#    args:
+#      - "--batch"
+#      - "--yes"
+#      - "-u"
+#      - "{{ .Env.GPG_SIGNATURE_KEY_ID }}"
+#      - "--pinentry-mode"
+#      - "loopback"
+##      - "--passphrase"
+##      - "$GPG_PASSPHRASE"
+#      - "--detach-sign"
+#      - "--verbose"
+#      - "--personal-digest-preferences"
+#      - "SHA256"
+#      - "--output"
+#      - "${signature}"
+#      - "${artifact}"
+#    stdin: "{{ .Env.GPG_PASSPHRASE }}"
+#    output: true
 
 checksum:
   extra_files:
