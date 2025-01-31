@@ -1,6 +1,6 @@
 module github.com/zentavr/mattermost-plugin-pingdom
 
-go 1.23
+go 1.22
 
 require (
 	github.com/mattermost/mattermost/server/public v0.1.9
