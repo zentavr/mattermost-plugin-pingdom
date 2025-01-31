@@ -1,0 +1,34 @@
+project_name: mattermost-plugin-pingdom
+
+dist: goreleaser
+
+builds:
+  - skip: true
+
+before:
+  hooks:
+    - make clean
+    - make dist
+    - |
+      sh -c "gpg --batch --yes
+        -u ${GPG_SIGNATURE_KEY_ID}
+        --pinentry-mode loopback
+        --passphrase \"$GPG_PASSPHRASE\"
+        --detach-sign
+        --verbose --personal-digest-preferences SHA256
+        -o dist/com.zentavr.pingdom-{{ .Version }}.sig
+        dist/com.zentavr.pingdom-{{ .Version }}.tar.gz"
+
+checksum:
+  extra_files:
+    - glob: ./dist/com.zentavr.pingdom-{{ .Version }}.tar.gz
+
+release:
+  github:
+    owner: zentavr
+    name: mattermost-plugin-pingdom
+
+  extra_files:
+    - glob: ./dist/com.zentavr.pingdom-{{ .Version }}.tar.gz
+    - glob: ./dist/com.zentavr.pingdom-{{ .Version }}.sig
+    - glob: GPG_SIGNING_3AF2387D.key
