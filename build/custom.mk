@@ -1,6 +1,7 @@
 # Include custom targets and environment variables here
 DEVCONTAINER_DIR ?= .devcontainer
 GPG_SIGNATURE_KEY_ID ?= 3AF2387D
+GPG_PASSPHRASE ?= password
 
 .PHONY: compose-start
 compose-start:
@@ -69,4 +70,4 @@ sign:
 
 .PHONY: gorelease
 gorelease:
-	GPG_SIGNATURE_KEY_ID=$(GPG_SIGNATURE_KEY_ID) goreleaser release --skip publish --skip validate --clean
+	GPG_SIGNATURE_KEY_ID=$(GPG_SIGNATURE_KEY_ID) GPG_PASSPHRASE=$(GPG_PASSPHRASE) goreleaser release --skip publish --skip validate --clean

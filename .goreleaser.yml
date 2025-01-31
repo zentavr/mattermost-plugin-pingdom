@@ -11,15 +11,15 @@ before:
     - make clean
     - make dist
     - |
-      gpg \
-        -u "{{ .Env.GPG_SIGNATURE_KEY_ID }} \
-        --batch \
-        --pinentry-mode loopback \
-        --passphrase "{{ .Env.GPG_PASSPHRASE }}" \
-        --verbose \
-        --personal-digest-preferences SHA256 \
-        --detach-sign \
-        dist/com.zentavr.pingdom-{{ .Version }}.tar.gz && \
+      gpg
+        -u "{{ .Env.GPG_SIGNATURE_KEY_ID }}"
+        --batch
+        --pinentry-mode loopback
+        --passphrase "{{ .Env.GPG_PASSPHRASE }}"
+        --verbose
+        --personal-digest-preferences SHA256
+        --detach-sign
+        dist/com.zentavr.pingdom-{{ .Version }}.tar.gz
     - ls -la ./dist
 
 checksum:
