@@ -69,11 +69,11 @@ sign:
 	@echo plugin sign at: dist/$(BUNDLE_NAME).sig
 
 sign-ci:
-	cd dist && gpg -u $(GPG_SIGNATURE_KEY_ID) --batch --pinentry-mode loopback --passphrase="$(GPG_PASSPHRASE)" --verbose --personal-digest-preferences SHA256 --detach-sign $(BUNDLE_NAME) && ls -la .
+	cd dist && gpg -u $(GPG_SIGNATURE_KEY_ID) --batch --pinentry-mode loopback --passphrase="$(GPG_PASSPHRASE)" --verbose --debug-all --personal-digest-preferences SHA256 --detach-sign $(BUNDLE_NAME) && ls -la .
 
 .PHONY: gorelease
 gorelease:
-	GPG_SIGNATURE_KEY_ID=$(GPG_SIGNATURE_KEY_ID) GPG_PASSPHRASE=$(GPG_PASSPHRASE) goreleaser release --skip publish --skip validate --clean
+	goreleaser release --skip publish --skip validate --clean
 
 .PHONY: ttt
 ttt:
