@@ -45,25 +45,25 @@ jobs:
           chmod 700 "$D"
           echo "home=${D}" >> $GITHUB_OUTPUT
 
-      - name: Prepare GNUPGHOME
-        run: |
-          # Ensure GPG can use the passphrase from the environment
-          echo "pinentry-mode loopback" >> "$GNUPGHOME"/gpg.conf
-          echo "trust-model always" >> "$GNUPGHOME"/gpg.conf
-
-          echo "batch" > "$GNUPGHOME/gpg-agent.conf"
-          echo "allow-loopback-pinentry" >> "$GNUPGHOME"/gpg-agent.conf
-          if [ -n "$GNUPGHOME" ]; then
-            echo "homedir ${GNUPGHOME}" >> "$GNUPGHOME"/gpg-agent.conf
-          fi
-          #echo "disable-ssh-support" >> "$GNUPGHOME"/gpg-agent.conf
-
-          echo "=== gpg-agent.conf ==="
-          cat "$GNUPGHOME"/gpg-agent.conf
-          echo "=== gpg.conf ==="
-          cat "$GNUPGHOME"/gpg.conf
-        env:
-          GNUPGHOME: "${{ steps.gpghome.outputs.home }}"
+#      - name: Prepare GNUPGHOME
+#        run: |
+#          # Ensure GPG can use the passphrase from the environment
+#          echo "pinentry-mode loopback" >> "$GNUPGHOME"/gpg.conf
+#          echo "trust-model always" >> "$GNUPGHOME"/gpg.conf
+#
+#          echo "batch" > "$GNUPGHOME/gpg-agent.conf"
+#          echo "allow-loopback-pinentry" >> "$GNUPGHOME"/gpg-agent.conf
+#          if [ -n "$GNUPGHOME" ]; then
+#            echo "homedir ${GNUPGHOME}" >> "$GNUPGHOME"/gpg-agent.conf
+#          fi
+#          #echo "disable-ssh-support" >> "$GNUPGHOME"/gpg-agent.conf
+#
+#          echo "=== gpg-agent.conf ==="
+#          cat "$GNUPGHOME"/gpg-agent.conf
+#          echo "=== gpg.conf ==="
+#          cat "$GNUPGHOME"/gpg.conf
+#        env:
+#          GNUPGHOME: "${{ steps.gpghome.outputs.home }}"
 
       #      - name: Import GPG Key
 #        uses: crazy-max/ghaction-import-gpg@v6.2.0
