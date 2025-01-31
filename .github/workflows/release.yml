@@ -97,7 +97,7 @@ jobs:
         with:
           distribution: goreleaser
           version: latest
-          args: release --rm-dist
+          args: release --clean --verbose
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           COSIGN_EXPERIMENTAL: "true"
@@ -113,6 +113,7 @@ jobs:
           fi
         env:
           GNUPGHOME: "${{ steps.gpghome.outputs.home }}"
+        if: ${{ always() }}
 
       - name: Generate subject
         id: hash
