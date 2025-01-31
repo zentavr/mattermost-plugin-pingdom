@@ -124,8 +124,8 @@ jobs:
           checksum_file=$(echo "$ARTIFACTS" | jq -r '.[] | select (.type=="Checksum") | .path')
           echo "hashes=$(cat $checksum_file | base64 -w0)" >> "$GITHUB_OUTPUT"
 
-      - uses: eviden-actions/clean-self-hosted-runner@v1.3.21
-        if: ${{ always() }}
+#      - uses: eviden-actions/clean-self-hosted-runner@v1.3.21
+#        if: ${{ always() }}
 
   provenance:
     needs:
