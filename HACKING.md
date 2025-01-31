@@ -28,6 +28,17 @@ Common make commands for working with plugins
 
 ### Some hints
 
+#### Signing the plugin
+Plugins installed via the Marketplace must be signed by a public key certificate trusted by the local Mattermost server.
+While the server ships with a default certificate used to verify plugins from the default Mattermost Marketplace, 
+the server can be configured to trust different certificates and point at a different plugin marketplace. 
+This document outlines the steps for generating a public key certificate and signing plugins for use with a custom 
+plugin marketplace.
+
+```shell
+make sign
+```
+
 #### Rebuild the web application part and redeploy into the mattermost server
 ```shell
 make clean-webapp
