@@ -69,4 +69,4 @@ sign:
 
 .PHONY: gorelease
 gorelease:
-	GPG_SIGNATURE_KEY_ID=$(GPG_SIGNATURE_KEY_ID) goreleaser release --skip publish --clean
+	GPG_SIGNATURE_KEY_ID=$(GPG_SIGNATURE_KEY_ID) goreleaser release --skip publish --skip validate --clean
