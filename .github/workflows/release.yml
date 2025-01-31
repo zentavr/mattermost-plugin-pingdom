@@ -8,7 +8,6 @@ on:
 concurrency: cut-release
 
 env:
-  GNUPGHOME: "${{ github.workspace }}/.gnupg"
   GPG_AGENT_INFO: ""
 
 jobs:
@@ -38,6 +37,11 @@ jobs:
       - name: Set tag output
         id: tag
         run: echo "tag_name=${GITHUB_REF#refs/*/}" >> "$GITHUB_OUTPUT"
+
+      - name: Creating GPG Home directory
+        id: gpghome
+        run: |
+          echo "home=$(mktemp --directory gpg-home.XXX)" >> $GITHUB_OUTPUT
 
       - name: Prepare GNUPGHOME
         run: |
@@ -71,8 +75,10 @@ jobs:
           cat "$GNUPGHOME"/gpg-agent.conf
           echo "=== gpg.conf ==="
           cat "$GNUPGHOME"/gpg.conf
+        env:
+          GNUPGHOME: "${{ steps.gpghome.outputs.home }}"
 
-#      - name: Import GPG Key
+      #      - name: Import GPG Key
 #        uses: crazy-max/ghaction-import-gpg@v6.2.0
 #        with:
 #          gpg_private_key: ${{ secrets.GPG_PRIVATE_KEY }}
@@ -92,6 +98,7 @@ jobs:
           gpg --list-secret-keys --keyid-format LONG
         env:
           GPG_PRIVATE_KEY: ${{ secrets.GPG_PRIVATE_KEY }}
+          GNUPGHOME: "${{ steps.gpghome.outputs.home }}"
 
       - name: Check if gpg-agent is running
         run: |
@@ -109,10 +116,16 @@ jobs:
           COSIGN_EXPERIMENTAL: "true"
           GPG_PASSPHRASE: ${{ secrets.GPG_PASSPHRASE }}
           GPG_SIGNATURE_KEY_ID: ${{ vars.GPG_SIGNATURE_KEY_ID }}
+          GNUPGHOME: "${{ steps.gpghome.outputs.home }}"
 
       - name: Trying to close the agent
         run: |
           pgrep gpg-agent && gpg-connect-agent "KILLAGENT" /bye || echo "gpg-agent is not running."
+          if [ -d "${GNUPGHOME}" ]; then
+            rm -rf ${GNUPGHOME}
+          fi
+        env:
+          GNUPGHOME: "${{ steps.gpghome.outputs.home }}"
 
       - name: Generate subject
         id: hash
