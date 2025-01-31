@@ -10,7 +10,7 @@ before:
 #    - make clean
 #    - make dist
     - |
-      cd dist && gpg \
+      gpg \
         -u "{{ .Env.GPG_SIGNATURE_KEY_ID }} \
         --batch \
         --pinentry-mode loopback \
@@ -18,8 +18,8 @@ before:
         --verbose \
         --personal-digest-preferences SHA256 \
         --detach-sign \
-        com.zentavr.pingdom-{{ .Version }}.tar.gz && \
-      ls -la .
+        dist/com.zentavr.pingdom-{{ .Version }}.tar.gz && \
+     - ls -la ./dist
 
 
 #binary_signs:
