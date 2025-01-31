@@ -7,6 +7,9 @@ on:
 
 concurrency: cut-release
 
+env:
+  GNUPGHOME: ${{ github.workspace }}/.gnupg
+
 jobs:
   release:
     runs-on: self-hosted
@@ -37,8 +40,27 @@ jobs:
 
       - name: Import GPG Key
         run: |
+          # Only run if GNUPGHOME is set and not empty
+          if [ -n "$GNUPGHOME" ]; then
+            # Check if the directory does not exist
+            if [ ! -d "$GNUPGHOME" ]; then
+              echo "Creating $GNUPGHOME directory..."
+              mkdir -p "$GNUPGHOME"
+              chmod 700 "$GNUPGHOME"
+              echo "Directory $GNUPGHOME created with permissions 700."
+            else
+              echo "Directory $GNUPGHOME already exists."
+            fi
+          else
+            echo "GNUPGHOME is not set or is empty; skipping creation."
+          fi
+
           # Import the key from the environment variable:
           echo "$GPG_PRIVATE_KEY" | gpg --batch --yes --import
+
+          # Ensure GPG can use the passphrase from the environment
+          echo "use-agent" >> "$GNUPGHOME"/gpg.conf
+          echo "allow-loopback-pinentry" >> "$GNUPGHOME"/gpg.conf
         env:
           GPG_PRIVATE_KEY: ${{ secrets.GPG_PRIVATE_KEY }}
 
