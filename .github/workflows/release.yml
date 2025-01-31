@@ -70,7 +70,7 @@ jobs:
           echo "=== gpg-agent.conf ==="
           cat "$GNUPGHOME"/gpg-agent.conf
           echo "=== gpg.conf ==="
-          "$GNUPGHOME"/gpg.conf
+          cat "$GNUPGHOME"/gpg.conf
 
       - name: Import GPG Key
         uses: crazy-max/ghaction-import-gpg@v6.2.0
