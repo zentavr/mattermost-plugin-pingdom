@@ -23,5 +23,5 @@ release:
 
   extra_files:
     - glob: ./dist/com.zentavr.pingdom-{{ .Version }}.tar.gz
-    - glob: ./dist/com.zentavr.pingdom-{{ .Version }}.sig
+    - glob: ./dist/com.zentavr.pingdom-{{ .Version }}.tar.gz.sig
     - glob: GPG_SIGNING_3AF2387D.key
