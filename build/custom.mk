@@ -1,5 +1,6 @@
 # Include custom targets and environment variables here
 DEVCONTAINER_DIR ?= .devcontainer
+GPG_SIGNATURE_KEY_ID ?= 3AF2387D
 
 .PHONY: compose-start
 compose-start:
@@ -57,3 +58,11 @@ ifneq ($(HAS_WEBAPP),)
 else
 	@echo There is no web application in the source code
 endif
+
+## Signs the plugin
+.PHONY: sign
+sign:
+	cd dist && gpg -u $(GPG_SIGNATURE_KEY_ID) --verbose --personal-digest-preferences SHA256 --detach-sign $(BUNDLE_NAME)
+
+	@echo plugin dist at: dist/$(BUNDLE_NAME)
+	@echo plugin sign at: dist/$(BUNDLE_NAME).sig

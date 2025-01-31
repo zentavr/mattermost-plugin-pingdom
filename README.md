@@ -19,6 +19,16 @@ Then `make dist` and take the `tar.gz` from the `dist` folder of your repo.
 1. Upload this file in the Mattermost **System Console > Plugins > Management** page to install the plugin, and enable 
    it. To learn more about how to upload a plugin, [see the documentation](https://docs.mattermost.com/administration/plugins.html#plugin-uploads).
 
+If your server requires the plugins to be signed, kindly read 
+[an official document](https://developers.mattermost.com/integrate/plugins/using-and-managing-plugins/#plugin-signing)
+how you can create your own signing key and import that into the Mattermost installation.
+Author's key ID is `3AF2387D` and the key is located at [GPG_SIGNING_3AF2387D.key](GPG_SIGNING_3AF2387D.key) of this repo.
+To sign with your key, do (after you have the dist):
+
+```shell
+GPG_SIGNATURE_KEY_ID=YOUR_ID make sign
+```
+
 ## Adding Webhook Configuration in Mattermost via plugin
 Go to **System Console** as administrator, check **Plugins** - **Pingdom Notifications** and add the webhook like on 
 the picture below.
