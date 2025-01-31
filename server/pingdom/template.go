@@ -61,40 +61,58 @@ type CommonProbe interface {
 	GetLocation() string
 }
 
-func (fp FirstProbe) GetIP() string {
+func (fp *FirstProbe) GetIP() string {
+	if fp == nil {
+		return "n/a"
+	}
 	return fp.IP
 }
-func (fp FirstProbe) GetIPV6() string {
+func (fp *FirstProbe) GetIPV6() string {
+	if fp == nil {
+		return "n/a"
+	}
 	return fp.IPV6
 }
-func (fp FirstProbe) GetLocation() string {
+func (fp *FirstProbe) GetLocation() string {
+	if fp == nil {
+		return "n/a"
+	}
 	return fp.Location
 }
 
-func (sp SecondProbe) GetIP() string {
+func (sp *SecondProbe) GetIP() string {
+	if sp == nil || sp.FirstProbe == nil {
+		return "n/a"
+	}
 	return sp.FirstProbe.IP
 }
-func (sp SecondProbe) GetIPV6() string {
+func (sp *SecondProbe) GetIPV6() string {
+	if sp == nil || sp.FirstProbe == nil {
+		return "n/a"
+	}
 	return sp.FirstProbe.IPV6
 }
-func (sp SecondProbe) GetLocation() string {
+func (sp *SecondProbe) GetLocation() string {
+	if sp == nil || sp.FirstProbe == nil {
+		return "n/a"
+	}
 	return sp.FirstProbe.Location
 }
 
 // Ref.: https://www.pingdom.com/resources/webhooks/
 type PingdomCheckMessage struct {
-	CheckID               uint64      `json:"check_id"`
-	CheckName             string      `json:"check_name"`
-	CheckType             string      `json:"check_type"`
-	CheckParams           KV          `json:"check_params"`
-	Tags                  []string    `json:"tags"`
-	PreviousState         string      `json:"previous_state"`
-	CurrentState          string      `json:"current_state"`
-	ImportanceLevel       string      `json:"importance_level"`
-	StateChangedTimestamp UnixTime    `json:"state_changed_timestamp"`
-	StateChangedUTCTime   TimeString  `json:"state_changed_utc_time"`
-	LongDescription       string      `json:"long_description"`
-	Description           string      `json:"short_description"`
-	FirstProbe            FirstProbe  `json:"first_probe"`
-	SecondProbe           SecondProbe `json:"second_probe"`
+	CheckID               uint64       `json:"check_id"`
+	CheckName             string       `json:"check_name"`
+	CheckType             string       `json:"check_type"`
+	CheckParams           KV           `json:"check_params"`
+	Tags                  []string     `json:"tags"`
+	PreviousState         string       `json:"previous_state"`
+	CurrentState          string       `json:"current_state"`
+	ImportanceLevel       string       `json:"importance_level"`
+	StateChangedTimestamp UnixTime     `json:"state_changed_timestamp"`
+	StateChangedUTCTime   TimeString   `json:"state_changed_utc_time"`
+	LongDescription       string       `json:"long_description"`
+	Description           string       `json:"short_description"`
+	FirstProbe            *FirstProbe  `json:"first_probe,omitempty"`
+	SecondProbe           *SecondProbe `json:"second_probe,omitempty"`
 }

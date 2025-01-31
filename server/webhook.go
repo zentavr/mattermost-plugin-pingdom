@@ -150,15 +150,18 @@ func ConvertPingdomToFields(config pingdomHookConfig, alert pingdom.PingdomCheck
 	fields = addFields(fields, "Probe Details", "", false)
 	// List probes
 	for _, probe := range []pingdom.CommonProbe{alert.FirstProbe, alert.SecondProbe} {
+		if probe == nil {
+			continue
+		}
 		msg = fmt.Sprintf(":earth_americas: %s\n", probe.GetLocation())
 		msg = fmt.Sprintf("%s:house: %s\n", msg, probe.GetIP())
 		msg = fmt.Sprintf("%s:european_castle: %s\n", msg, probe.GetIPV6())
 
 		probeType := "Unknown"
 		switch probe.(type) {
-		case pingdom.FirstProbe:
+		case *pingdom.FirstProbe:
 			probeType = "First Probe"
-		case pingdom.SecondProbe:
+		case *pingdom.SecondProbe:
 			probeType = "Second Probe"
 		default:
 			probeType = "First Probe"

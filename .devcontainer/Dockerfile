@@ -1,4 +1,5 @@
-FROM mattermost/mattermost-team-edition:10.4.1
+#FROM mattermost/mattermost-team-edition:10.4.1
+FROM mattermost/mattermost-team-edition:10.4.2
 
 ARG APP_ROOT=/app
 ARG APP_USER=mattermost
