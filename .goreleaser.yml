@@ -1,3 +1,4 @@
+version: 2
 project_name: mattermost-plugin-pingdom
 
 dist: goreleaser
@@ -19,7 +20,7 @@ before:
         --personal-digest-preferences SHA256 \
         --detach-sign \
         dist/com.zentavr.pingdom-{{ .Version }}.tar.gz && \
-     - ls -la ./dist
+    - ls -la ./dist
 
 checksum:
   extra_files:
