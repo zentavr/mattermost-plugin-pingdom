@@ -55,7 +55,7 @@ jobs:
           else
             echo "GNUPGHOME is not set or is empty; skipping creation."
           fi
-          
+
           # Ensure GPG can use the passphrase from the environment
           echo "pinentry-mode loopback" >> "$GNUPGHOME"/gpg.conf
           echo "trust-model always" >> "$GNUPGHOME"/gpg.conf
@@ -66,6 +66,11 @@ jobs:
             echo "homedir ${GNUPGHOME}" >> "$GNUPGHOME"/gpg-agent.conf
           fi
           echo "disable-ssh-support" >> "$GNUPGHOME"/gpg-agent.conf
+
+          echo "=== gpg-agent.conf ==="
+          cat "$GNUPGHOME"/gpg-agent.conf
+          echo "=== gpg.conf ==="
+          "$GNUPGHOME"/gpg.conf
 
       - name: Import GPG Key
         uses: crazy-max/ghaction-import-gpg@v6.2.0
