@@ -26,3 +26,4 @@ jobs:
         run: make dist
 
       - uses: eviden-actions/clean-self-hosted-runner@v1.3.21
+        if: ${{ always() }}

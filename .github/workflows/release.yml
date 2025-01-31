@@ -55,11 +55,17 @@ jobs:
           else
             echo "GNUPGHOME is not set or is empty; skipping creation."
           fi
+          
           # Ensure GPG can use the passphrase from the environment
           echo "pinentry-mode loopback" >> "$GNUPGHOME"/gpg.conf
-          echo "allow-loopback-pinentry" >> "$GNUPGHOME"/gpg.conf
           echo "trust-model always" >> "$GNUPGHOME"/gpg.conf
-          echo "disable-ssh-support" >> "$GNUPGHOME/gpg.conf"
+
+          echo "batch" > "$GNUPGHOME/gpg-agent.conf"
+          echo "allow-loopback-pinentry" >> "$GNUPGHOME"/gpg-agent.conf
+          if [ -n "$GNUPGHOME" ]; then
+            echo "homedir ${GNUPGHOME}" >> "$GNUPGHOME"/gpg-agent.conf
+          fi
+          echo "disable-ssh-support" >> "$GNUPGHOME"/gpg-agent.conf
 
       - name: Import GPG Key
         uses: crazy-max/ghaction-import-gpg@v6.2.0
@@ -122,6 +128,7 @@ jobs:
           echo "hashes=$(cat $checksum_file | base64 -w0)" >> "$GITHUB_OUTPUT"
 
       - uses: eviden-actions/clean-self-hosted-runner@v1.3.21
+        if: ${{ always() }}
 
   provenance:
     needs:
