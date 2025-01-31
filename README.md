@@ -12,12 +12,15 @@ The example of the problem alert:
  ![pingdom-003.png](assets/readme/pingdom-003.png)
 
 ## Plugin Installation
-There would be pre-compiled binaries later. For now you can clone the repo and compile yourself.
+
+1. Go to the [releases page of this GitHub repository](https://github.com/zentavr/mattermost-plugin-pingdom/releases) 
+   and download the latest release for your Mattermost server.
+2. Upload this file in the Mattermost **System Console > Plugins > Management** page to install the plugin, and enable 
+   it. To learn more about how to upload a plugin, [see the documentation](https://docs.mattermost.com/administration/plugins.html#plugin-uploads).
+
+### Assembling the latest code from master
 For the compilation you would need Linux/MacOS (FreeBSD/Windows WSL should work as well), GNU Make, tar, go 1.23, node v22.12.0+.
 Then `make dist` and take the `tar.gz` from the `dist` folder of your repo.
-
-1. Upload this file in the Mattermost **System Console > Plugins > Management** page to install the plugin, and enable 
-   it. To learn more about how to upload a plugin, [see the documentation](https://docs.mattermost.com/administration/plugins.html#plugin-uploads).
 
 If your server requires the plugins to be signed, kindly read 
 [an official document](https://developers.mattermost.com/integrate/plugins/using-and-managing-plugins/#plugin-signing)
