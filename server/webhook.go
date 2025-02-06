@@ -110,7 +110,7 @@ func ConvertPingdomToFields(config pingdomHookConfig, alert pingdom.PingdomCheck
 
 	switch alert.CheckType {
 	case "HTTP", "HTTP_CUSTOM":
-		msg = fmt.Sprintf("%s**Port**: %s\n", msg, alert.CheckParams["port"])
+		msg = fmt.Sprintf("%s**Port**: %v\n", msg, alert.CheckParams["port"])
 		msg = fmt.Sprintf("%s**URL**: `%s`\n", msg, alert.CheckParams["url"])
 		msg = fmt.Sprintf("%s**IPv6**: %v\n", msg, alert.CheckParams["ipv6"])
 		msg = fmt.Sprintf("%s**Encryption**: %v\n", msg, alert.CheckParams["encryption"])
