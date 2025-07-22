@@ -66,7 +66,7 @@ jobs:
 
       - name: Run GoReleaser
         id: run-goreleaser
-        uses: goreleaser/goreleaser-action@v6.1.0
+        uses: goreleaser/goreleaser-action@9c156ee8a17a598857849441385a2041ef570552 # v6.3.0
         with:
           distribution: goreleaser
           version: latest
@@ -97,7 +97,7 @@ jobs:
           checksum_file=$(echo "$ARTIFACTS" | jq -r '.[] | select (.type=="Checksum") | .path')
           echo "hashes=$(cat $checksum_file | base64 -w0)" >> "$GITHUB_OUTPUT"
 
-      - uses: eviden-actions/clean-self-hosted-runner@v1.3.21
+      - uses: eviden-actions/clean-self-hosted-runner@ea869f4fec593a1f152a59c5820b3b9112eac94a # v1.4.10
         if: ${{ always() }}
 
   provenance:

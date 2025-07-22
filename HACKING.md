@@ -74,3 +74,9 @@ So, extract these into i18n/en.json and translate to the other languages if need
 ```shell
 make i18n-extract
 ```
+
+#### Make Github Release
+1. Adjust `.version` at [plugin.json](plugin.json)
+2. Commit to master
+3. Run `make patch` (or `make minor`/`make major`) which would create git tag and pushes that to git repo.
+4. Git builder would assemble that package and you should see that in Releases.

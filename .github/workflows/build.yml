@@ -7,6 +7,9 @@ on:
       - master
   pull_request:
 
+permissions:
+  contents: read
+
 jobs:
   build:
     runs-on: self-hosted
@@ -25,5 +28,5 @@ jobs:
       - name: Dist
         run: make dist
 
-      - uses: eviden-actions/clean-self-hosted-runner@v1.3.21
+      - uses: eviden-actions/clean-self-hosted-runner@ea869f4fec593a1f152a59c5820b3b9112eac94a # v1.4.10
         if: ${{ always() }}
